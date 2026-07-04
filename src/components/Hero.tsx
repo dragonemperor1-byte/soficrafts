@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const { scrollY } = useScroll();
@@ -79,16 +80,16 @@ const Hero = () => {
         </motion.p>
 
         {/* CTA Button */}
-        <motion.a
-          href="#collection"
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="btn-hero group"
         >
-          Explore Collection
-          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </motion.a>
+          <Link to="/collection" className="btn-hero group">
+            Explore Collection
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
       </motion.div>
 
       {/* Scroll Indicator */}
