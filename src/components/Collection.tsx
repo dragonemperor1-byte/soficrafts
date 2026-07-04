@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import ProductCard from './ProductCard';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 const products = [
   {
@@ -71,6 +73,13 @@ const Collection = () => {
               index={index}
             />
           ))}
+        </div>
+
+        <div className="text-center mt-16">
+          <Link to="/collection" className="btn-hero group inline-flex">
+            View Full Collection
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>
