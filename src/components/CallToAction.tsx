@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
   const ref = useRef(null);
@@ -33,15 +34,10 @@ const CallToAction = () => {
             Each piece is waiting to become part of your story.
           </p>
 
-          <motion.a
-            href="#collection"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-light group"
-          >
+          <Link to="/collection" className="btn-light group inline-flex">
             Explore Collection
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </motion.a>
+          </Link>
         </motion.div>
       </div>
     </section>
