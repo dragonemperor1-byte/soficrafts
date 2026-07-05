@@ -19,7 +19,9 @@ const CollectionPage = () => {
       const matchesCat = activeCategory === 'All' || p.category === activeCategory;
       const matchesSearch =
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.description.toLowerCase().includes(search.toLowerCase());
+        p.description.toLowerCase().includes(search.toLowerCase()) ||
+        p.category.toLowerCase().includes(search.toLowerCase()) ||
+        p.longDescription.toLowerCase().includes(search.toLowerCase());
       return matchesCat && matchesSearch;
     });
     if (sortBy === 'low') list = [...list].sort((a, b) => a.price - b.price);
@@ -170,7 +172,7 @@ const CollectionPage = () => {
                     {/* Add to cart overlay */}
                     <button
                       onClick={() => handleAdd(product)}
-                      className="absolute bottom-3 right-3 w-11 h-11 bg-heritage-black text-mountain-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 hover:bg-chinar-burgundy"
+                      className="absolute bottom-3 right-3 w-11 h-11 bg-heritage-black text-mountain-white rounded-full flex items-center justify-center shadow-elevated transition-all duration-500 hover:bg-chinar-burgundy hover:-translate-y-0.5"
                       aria-label={`Add ${product.name} to cart`}
                     >
                       <Plus className="w-5 h-5" />
@@ -190,7 +192,7 @@ const CollectionPage = () => {
                       </p>
                       <button
                         onClick={() => handleAdd(product)}
-                        className="md:hidden text-xs uppercase tracking-[0.15em] text-heritage-black hover:text-chinar-burgundy transition-colors flex items-center gap-1"
+                        className="text-xs uppercase tracking-[0.15em] text-heritage-black hover:text-chinar-burgundy transition-colors flex items-center gap-1"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" /> Add
                       </button>
