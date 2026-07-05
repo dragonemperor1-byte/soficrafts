@@ -472,8 +472,11 @@ const Field = ({
   placeholder?: string;
 }) => (
   <div>
-    <label className="label-elegant block mb-2">{label}</label>
+    <label className="label-elegant block mb-2" htmlFor={label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
+      {label}
+    </label>
     <input
+      id={label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
       type={type}
       value={value}
       onChange={(e) => onChange(e.target.value)}
