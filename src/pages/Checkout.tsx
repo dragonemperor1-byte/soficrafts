@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Wallet, Banknote, Copy } from 'lucide-react';
+import { ArrowLeft, Check, Wallet, Banknote, Copy, MessageCircle, ExternalLink } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCart } from '@/context/CartContext';
@@ -14,12 +14,21 @@ const WHATSAPP_NUMBER = '918097132801'; // no + for wa.me
 type Step = 'address' | 'payment' | 'success';
 type PaymentMethod = 'cash' | 'upi';
 
+interface OrderDetails {
+  id: string;
+  method: PaymentMethod;
+  message: string;
+  whatsappUrl: string;
+  upiUrl?: string;
+  total: number;
+}
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, totalAmount, totalItems, clearCart } = useCart();
   const [step, setStep] = useState<Step>('address');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
-  const [orderId, setOrderId] = useState('');
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
 
   const [address, setAddress] = useState({
     name: '',
@@ -33,7 +42,7 @@ const Checkout = () => {
     notes: '',
   });
 
-  if (items.length === 0 && step !== 'success') {
+  if (items.length === 0 && !orderDetails) {
     return (
       <div className="min-h-screen bg-mountain-white">
         <Navbar />
@@ -94,29 +103,32 @@ const Checkout = () => {
 
   const placeOrder = () => {
     const oid = 'SC-' + Date.now().toString().slice(-8);
-    setOrderId(oid);
     const message = buildOrderMessage(paymentMethod, oid);
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${totalAmount}&cu=INR&tn=${encodeURIComponent('Sofi Crafts Order ' + oid)}`;
 
-    if (paymentMethod === 'upi') {
-      const upiUrl = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${totalAmount}&cu=INR&tn=${encodeURIComponent('Order ' + oid)}`;
-      // Open UPI app
-      window.location.href = upiUrl;
-      // Open WhatsApp confirmation shortly after so both work
-      setTimeout(() => {
-        window.open(waUrl, '_blank');
-      }, 800);
-    } else {
-      window.open(waUrl, '_blank');
-    }
-
+    setOrderDetails({
+      id: oid,
+      method: paymentMethod,
+      message,
+      whatsappUrl: waUrl,
+      upiUrl: paymentMethod === 'upi' ? upiUrl : undefined,
+      total: totalAmount,
+    });
     setStep('success');
-    clearCart();
   };
 
-  const copyUpi = () => {
-    navigator.clipboard.writeText(UPI_ID);
-    toast.success('UPI ID copied');
+  const copyToClipboard = async (value: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success(`${label} copied`);
+    } catch {
+      toast.error(`Could not copy ${label.toLowerCase()}`);
+    }
+  };
+
+  const finishOrder = () => {
+    clearCart();
   };
 
   return (
@@ -269,7 +281,7 @@ const Checkout = () => {
                           </div>
                           <button
                             type="button"
-                            onClick={(e) => { e.stopPropagation(); copyUpi(); }}
+                            onClick={(e) => { e.stopPropagation(); copyToClipboard(UPI_ID, 'UPI ID'); }}
                             className="text-xs uppercase tracking-[0.15em] text-chinar-burgundy hover:text-heritage-black flex items-center gap-1"
                           >
                             <Copy className="w-3.5 h-3.5" /> Copy
@@ -309,19 +321,73 @@ const Checkout = () => {
                 </div>
                 <p className="label-elegant text-saffron-gold mb-3">Order Placed</p>
                 <h2 className="heading-section text-heritage-black mb-4">
-                  Thank you for <span className="italic">your order</span>
+                  Complete <span className="italic">your order</span>
                 </h2>
                 <p className="body-elegant text-muted-foreground max-w-lg mx-auto mb-6">
-                  Your order <span className="text-heritage-black">{orderId}</span> has been sent to us via WhatsApp.
-                  {paymentMethod === 'upi' && ' Please complete the UPI payment in your app.'}
-                  {' '}We'll reach out shortly to confirm the details.
+                  Order <span className="text-heritage-black">{orderDetails?.id}</span> is ready. Send the order details on WhatsApp so we receive your address and selected pieces.
                 </p>
+
+                {orderDetails?.method === 'upi' && (
+                  <div className="max-w-lg mx-auto mb-6 p-5 bg-snow-mist border border-stone-grey text-left">
+                    <p className="label-elegant text-saffron-gold mb-3">UPI Payment</p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Open any UPI app with the amount pre-filled. If your browser blocks it, copy the UPI ID and amount manually.
+                    </p>
+                    <a
+                      href={orderDetails.upiUrl}
+                      onClick={finishOrder}
+                      className="btn-hero w-full justify-center mb-3"
+                    >
+                      Pay ₹{orderDetails.total.toLocaleString('en-IN')} via UPI
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => copyToClipboard(UPI_ID, 'UPI ID')}
+                        className="text-xs uppercase tracking-[0.15em] text-heritage-black border border-stone-grey px-4 py-3 hover:border-heritage-black transition-colors"
+                      >
+                        Copy UPI ID
+                      </button>
+                      <button
+                        onClick={() => copyToClipboard(String(orderDetails.total), 'Amount')}
+                        className="text-xs uppercase tracking-[0.15em] text-heritage-black border border-stone-grey px-4 py-3 hover:border-heritage-black transition-colors"
+                      >
+                        Copy Amount
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="max-w-lg mx-auto mb-8 p-5 bg-mountain-white border border-saffron-gold/30 text-left">
+                  <p className="label-elegant text-saffron-gold mb-3">WhatsApp Order</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    This sends your address, cart items, total, and payment method directly to Sofi Crafts.
+                  </p>
+                  <a
+                    href={orderDetails?.whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={finishOrder}
+                    className="btn-hero w-full justify-center mb-3"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Send order on WhatsApp
+                  </a>
+                  <button
+                    onClick={() => orderDetails && copyToClipboard(orderDetails.message, 'Order details')}
+                    className="w-full text-xs uppercase tracking-[0.15em] text-heritage-black border border-stone-grey px-6 py-3 hover:border-heritage-black transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    Copy Order Details
+                  </button>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button onClick={() => navigate('/collection')} className="btn-hero">
+                  <button onClick={() => { finishOrder(); navigate('/collection'); }} className="btn-hero">
                     Continue Shopping
                   </button>
                   <button
-                    onClick={() => navigate('/')}
+                    onClick={() => { finishOrder(); navigate('/'); }}
                     className="text-sm uppercase tracking-[0.15em] text-heritage-black border border-stone-grey px-8 py-4 hover:border-heritage-black transition-colors"
                   >
                     Back to Home
@@ -340,8 +406,17 @@ const Checkout = () => {
               <div className="space-y-4 mb-6 max-h-80 overflow-y-auto pr-2">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3">
-                    <div className="w-14 h-20 flex-shrink-0 bg-gradient-to-br from-mountain-white to-stone-grey flex items-center justify-center">
-                      <span className="text-lg text-saffron-gold/60">{item.icon}</span>
+                    <div className="w-14 h-20 flex-shrink-0 bg-gradient-to-br from-mountain-white to-stone-grey flex items-center justify-center overflow-hidden">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={`${item.name} order item`}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="text-lg text-saffron-gold/60">{item.icon}</span>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-display text-sm text-heritage-black leading-tight">
