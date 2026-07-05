@@ -44,8 +44,17 @@ const CartDrawer = () => {
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4 pb-4 border-b border-stone-grey/50">
-                  <div className="w-20 h-28 flex-shrink-0 bg-gradient-to-br from-snow-mist to-stone-grey flex items-center justify-center">
-                    <span className="text-2xl text-saffron-gold/60">{item.icon}</span>
+                  <div className="w-20 h-28 flex-shrink-0 bg-gradient-to-br from-snow-mist to-stone-grey flex items-center justify-center overflow-hidden">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={`${item.name} in cart`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-2xl text-saffron-gold/60">{item.icon}</span>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">
