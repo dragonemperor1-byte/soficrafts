@@ -31,6 +31,7 @@ const CollectionPage = () => {
 
   const handleAdd = (product: Product) => {
     addItem(product);
+    openCart();
     toast.success(`${product.name} added to cart`, {
       action: { label: 'View Cart', onClick: openCart },
     });

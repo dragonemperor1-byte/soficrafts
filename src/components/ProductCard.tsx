@@ -19,6 +19,7 @@ const ProductCard = ({ name, description, price, index }: ProductCardProps) => {
     e.stopPropagation();
     if (!product) return;
     addItem(product);
+    openCart();
     toast.success(`${product.name} added to cart`, {
       action: { label: 'View Cart', onClick: openCart },
     });
