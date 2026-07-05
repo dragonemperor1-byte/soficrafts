@@ -19,7 +19,9 @@ const CollectionPage = () => {
       const matchesCat = activeCategory === 'All' || p.category === activeCategory;
       const matchesSearch =
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.description.toLowerCase().includes(search.toLowerCase());
+        p.description.toLowerCase().includes(search.toLowerCase()) ||
+        p.category.toLowerCase().includes(search.toLowerCase()) ||
+        p.longDescription.toLowerCase().includes(search.toLowerCase());
       return matchesCat && matchesSearch;
     });
     if (sortBy === 'low') list = [...list].sort((a, b) => a.price - b.price);
@@ -29,6 +31,7 @@ const CollectionPage = () => {
 
   const handleAdd = (product: Product) => {
     addItem(product);
+    openCart();
     toast.success(`${product.name} added to cart`, {
       action: { label: 'View Cart', onClick: openCart },
     });
@@ -141,14 +144,24 @@ const CollectionPage = () => {
                   className="group"
                 >
                   <div className="relative aspect-[2/3] mb-4 overflow-hidden bg-gradient-to-br from-snow-mist to-stone-grey">
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 kashmir-pattern">
-                      <div className="w-14 h-14 mb-3 rounded-full border border-saffron-gold/30 flex items-center justify-center">
-                        <span className="text-xl text-saffron-gold/60">{product.icon}</span>
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={`${product.name} by Sofi Crafts`}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-4 kashmir-pattern">
+                        <div className="w-14 h-14 mb-3 rounded-full border border-saffron-gold/30 flex items-center justify-center">
+                          <span className="text-xl text-saffron-gold/60">{product.icon}</span>
+                        </div>
+                        <p className="font-display text-sm text-heritage-black/40 text-center px-2">
+                          {product.name}
+                        </p>
                       </div>
-                      <p className="font-display text-sm text-heritage-black/40 text-center px-2">
-                        {product.name}
-                      </p>
-                    </div>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-heritage-black/35 to-transparent pointer-events-none" />
 
                     {/* Category tag */}
                     <div className="absolute top-3 left-3 px-2 py-1 bg-mountain-white/90 backdrop-blur-sm">
@@ -160,7 +173,7 @@ const CollectionPage = () => {
                     {/* Add to cart overlay */}
                     <button
                       onClick={() => handleAdd(product)}
-                      className="absolute bottom-3 right-3 w-11 h-11 bg-heritage-black text-mountain-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 hover:bg-chinar-burgundy"
+                      className="absolute bottom-3 right-3 w-11 h-11 bg-heritage-black text-mountain-white rounded-full flex items-center justify-center shadow-elevated transition-all duration-500 hover:bg-chinar-burgundy hover:-translate-y-0.5"
                       aria-label={`Add ${product.name} to cart`}
                     >
                       <Plus className="w-5 h-5" />
@@ -180,7 +193,7 @@ const CollectionPage = () => {
                       </p>
                       <button
                         onClick={() => handleAdd(product)}
-                        className="md:hidden text-xs uppercase tracking-[0.15em] text-heritage-black hover:text-chinar-burgundy transition-colors flex items-center gap-1"
+                        className="text-xs uppercase tracking-[0.15em] text-heritage-black hover:text-chinar-burgundy transition-colors flex items-center gap-1"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" /> Add
                       </button>
