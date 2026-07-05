@@ -141,14 +141,24 @@ const CollectionPage = () => {
                   className="group"
                 >
                   <div className="relative aspect-[2/3] mb-4 overflow-hidden bg-gradient-to-br from-snow-mist to-stone-grey">
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 kashmir-pattern">
-                      <div className="w-14 h-14 mb-3 rounded-full border border-saffron-gold/30 flex items-center justify-center">
-                        <span className="text-xl text-saffron-gold/60">{product.icon}</span>
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={`${product.name} by Sofi Crafts`}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-4 kashmir-pattern">
+                        <div className="w-14 h-14 mb-3 rounded-full border border-saffron-gold/30 flex items-center justify-center">
+                          <span className="text-xl text-saffron-gold/60">{product.icon}</span>
+                        </div>
+                        <p className="font-display text-sm text-heritage-black/40 text-center px-2">
+                          {product.name}
+                        </p>
                       </div>
-                      <p className="font-display text-sm text-heritage-black/40 text-center px-2">
-                        {product.name}
-                      </p>
-                    </div>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-heritage-black/35 to-transparent pointer-events-none" />
 
                     {/* Category tag */}
                     <div className="absolute top-3 left-3 px-2 py-1 bg-mountain-white/90 backdrop-blur-sm">
