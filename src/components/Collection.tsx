@@ -4,39 +4,9 @@ import { useRef } from 'react';
 import ProductCard from './ProductCard';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { products as allProducts } from '@/data/products';
 
-const products = [
-  {
-    name: "Chinar Bloom Suit",
-    description: "Hand-embroidered Pure Kashmir",
-    price: 12500,
-  },
-  {
-    name: "Valley Mist Kurti",
-    description: "Artisan Crafted Elegance",
-    price: 8999,
-  },
-  {
-    name: "Himalayan Embrace",
-    description: "Pure Pashmina Heritage",
-    price: 18500,
-  },
-  {
-    name: "Saffron Sunset Cordset",
-    description: "Contemporary Kashmir Style",
-    price: 10500,
-  },
-  {
-    name: "Forest Whisper Stole",
-    description: "Hand-woven Kashmiri Art",
-    price: 6500,
-  },
-  {
-    name: "Royal Kashmir Ensemble",
-    description: "Complete Traditional Set",
-    price: 22000,
-  },
-];
+const products = allProducts.filter((p) => p.imageUrl).slice(0, 6);
 
 const Collection = () => {
   const ref = useRef(null);
@@ -66,7 +36,7 @@ const Collection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {products.map((product, index) => (
             <ProductCard
-              key={product.name}
+              key={product.id}
               name={product.name}
               description={product.description}
               price={product.price}
