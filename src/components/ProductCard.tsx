@@ -38,12 +38,21 @@ const ProductCard = ({ name, description, price, index }: ProductCardProps) => {
       className="group cursor-pointer"
     >
       <div className="relative aspect-[2/3] mb-5 overflow-hidden bg-gradient-to-br from-snow-mist to-stone-grey">
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 kashmir-pattern">
-          <div className="w-16 h-16 mb-4 rounded-full border border-saffron-gold/30 flex items-center justify-center">
-            <span className="text-2xl text-saffron-gold/60">{product?.icon ?? '❈'}</span>
+        {product?.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={name}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 kashmir-pattern">
+            <div className="w-16 h-16 mb-4 rounded-full border border-saffron-gold/30 flex items-center justify-center">
+              <span className="text-2xl text-saffron-gold/60">{product?.icon ?? '❈'}</span>
+            </div>
+            <p className="font-display text-lg text-heritage-black/40 text-center">{name}</p>
           </div>
-          <p className="font-display text-lg text-heritage-black/40 text-center">{name}</p>
-        </div>
+        )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-heritage-black/80 via-heritage-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
           <button
