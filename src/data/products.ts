@@ -414,12 +414,8 @@ export const products: Product[] = [
 export const categories = [
   "All",
   "Suits",
-  "Kurtis",
   "Long Kurtis",
-  "2-Piece Suits",
-  "Full Suits",
   "Cordsets",
   "Crush Cotton Kaftans",
-  "Shawls",
   "Stoles",
 ];
