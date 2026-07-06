@@ -32,6 +32,16 @@ const catalogImages = {
   sandalBloom: '/__l5e/assets-v1/595b57ec-aa01-43e1-8382-340ea1450868/sandal-bloom.png',
   marjaanTapestry: '/__l5e/assets-v1/190c2c84-740f-47f1-b0a0-ce8bb3d41300/marjaan-tapestry.png',
   shabnamNoir: '/__l5e/assets-v1/7e88563a-ff8c-45fb-b915-16909e43a49c/shabnam-noir.png',
+  firdausWhisper: '/__l5e/assets-v1/643d224f-821c-41e7-ab7e-f40598f048ac/firdaus-whisper.png',
+  zoonVelvet: '/__l5e/assets-v1/f0e3cb17-a7e5-42c8-9d57-78df6ffd455b/zoon-velvet.png',
+  naqshERaaz: '/__l5e/assets-v1/ff1cae34-6111-47c5-a157-a48f85f88f2b/naqsh-e-raaz.png',
+  rindEBahar: '/__l5e/assets-v1/a03bc953-e4e0-4c26-bff4-c9e8800cead3/rind-e-bahar.png',
+  saffronReverie: '/__l5e/assets-v1/da1c3438-3556-42ec-8460-4b9172d3a59d/saffron-reverie.png',
+  gulnaarReverie: '/__l5e/assets-v1/dab28334-c681-4111-b8ed-6c829e66efed/gulnaar-reverie.png',
+  shabnamRaaga: '/__l5e/assets-v1/9fae00d4-9f9d-4ab2-a8fe-16c24093a53c/shabnam-raaga.png',
+  marjaanAtelier: '/__l5e/assets-v1/aee63d1f-598d-4f3d-be8e-9d2c784cfc84/marjaan-atelier.png',
+  niloferVeil: '/__l5e/assets-v1/83a57218-e8ce-4633-9267-cea8d564f116/nilofer-veil.png',
+  rubaEmber: '/__l5e/assets-v1/a0a97904-e055-4fa4-845c-e722cc0bbd40/ruba-ember.png',
 };
 
 export const products: Product[] = [
