@@ -7,12 +7,14 @@ import Footer from '@/components/Footer';
 import { products, categories, Product } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
+import ProductDetailDialog from '@/components/ProductDetailDialog';
 
 const CollectionPage = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'featured' | 'low' | 'high'>('featured');
   const { addItem, openCart } = useCart();
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
 
   const filtered = useMemo(() => {
     let list = products.filter((p) => {
@@ -29,7 +31,8 @@ const CollectionPage = () => {
     return list;
   }, [activeCategory, search, sortBy]);
 
-  const handleAdd = (product: Product) => {
+  const handleAdd = (product: Product, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     addItem(product);
     openCart();
     toast.success(`${product.name} added to cart`, {
@@ -143,7 +146,10 @@ const CollectionPage = () => {
                   }}
                   className="group"
                 >
-                  <div className="relative aspect-[2/3] mb-4 overflow-hidden bg-gradient-to-br from-snow-mist to-stone-grey">
+                  <div
+                    onClick={() => setDetailProduct(product)}
+                    className="relative aspect-[2/3] mb-4 overflow-hidden bg-gradient-to-br from-snow-mist to-stone-grey cursor-pointer"
+                  >
                     {product.imageUrl ? (
                       <img
                         src={product.imageUrl}
@@ -172,7 +178,7 @@ const CollectionPage = () => {
 
                     {/* Add to cart overlay */}
                     <button
-                      onClick={() => handleAdd(product)}
+                      onClick={(e) => handleAdd(product, e)}
                       className="absolute bottom-3 right-3 w-11 h-11 bg-heritage-black text-mountain-white rounded-full flex items-center justify-center shadow-elevated transition-all duration-500 hover:bg-chinar-burgundy hover:-translate-y-0.5"
                       aria-label={`Add ${product.name} to cart`}
                     >
@@ -181,7 +187,10 @@ const CollectionPage = () => {
                   </div>
 
                   <div>
-                    <h3 className="font-display text-lg text-heritage-black leading-tight">
+                    <h3
+                      onClick={() => setDetailProduct(product)}
+                      className="font-display text-lg text-heritage-black leading-tight cursor-pointer hover:text-chinar-burgundy transition-colors"
+                    >
                       {product.name}
                     </h3>
                     <p className="text-xs text-muted-foreground mt-1 mb-2">
@@ -192,7 +201,7 @@ const CollectionPage = () => {
                         ₹{product.price.toLocaleString('en-IN')}
                       </p>
                       <button
-                        onClick={() => handleAdd(product)}
+                        onClick={(e) => handleAdd(product, e)}
                         className="text-xs uppercase tracking-[0.15em] text-heritage-black hover:text-chinar-burgundy transition-colors flex items-center gap-1"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" /> Add
@@ -205,6 +214,8 @@ const CollectionPage = () => {
           )}
         </div>
       </section>
+
+      <ProductDetailDialog product={detailProduct} onClose={() => setDetailProduct(null)} />
 
       <Footer />
     </div>
